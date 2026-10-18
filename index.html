@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10120f">
+  <meta name="description" content="صقر ١٥: طيران حر وأهداف عشوائية بلا نهاية. تتبّع حرارة الصاروخ، ثبّت التصويب، ثم أطلق.">
+  <title>صقر ١٥ — احمِ السماء</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app">
+  <main class="scope" id="scope" tabindex="0" aria-label="حرّك الفأرة للتصويب. اضغط مطولًا زر الفأرة الأيمن أو L لتثبيت الهدف. مسافة للإطلاق، وEscape للقائمة.">
+    <canvas id="world" aria-label="المشهد الجوي ثلاثي الأبعاد"></canvas>
+    <canvas id="hud" aria-hidden="true"></canvas>
+    <div class="scope-vignette"></div>
+
+    <div class="game-top">
+      <div class="game-name">صقر <b>١٥</b><small id="mission-status">طيران حر</small></div>
+      <div class="scoreboard" aria-label="إحصاءات الطيران الحر">
+        <span class="endless-mode">وضع حر <b aria-label="بلا نهاية">∞</b></span>
+        <span>إسقاطات <b id="score">٠</b></span>
+        <span>أهداف <b id="contacts-count">٣</b></span>
+        <span class="danger">تسلّلت <b id="breaches">٠</b></span>
+      </div>
+      <span id="mission-clock" class="timer">٠٠:٠٠</span>
+    </div>
+    <div class="scope-top-left"><strong id="sensor-label">حراري أبيض</strong><span id="fov-label">١٫٠×</span></div>
+    <div class="scope-top-right"><span class="record-dot"></span><span>تسجيل</span><span id="rec-time">٠٠:٠٠:٠٠</span></div>
+
+    <div class="edge-readout gps-readout" aria-label="إحداثيات افتراضية داخل المحاكاة">
+      <small class="readout-caption"><bdi>GPS</bdi> · إحداثيات المحاكاة</small>
+      <div><span>عرض</span><strong id="gps-lat" dir="ltr">— N</strong></div>
+      <div><span>طول</span><strong id="gps-lon" dir="ltr">— E</strong></div>
+    </div>
+    <div class="edge-readout angle-readout" aria-label="زوايا الكاميرا الحرارية">
+      <div><span>السمت <bdi>AZ</bdi></span><strong id="sensor-az" dir="ltr">+000.0°</strong></div>
+      <div><span>الارتفاع <bdi>EL</bdi></span><strong id="sensor-el" dir="ltr">−000.0°</strong></div>
+    </div>
+    <div class="edge-readout target-readout" aria-label="بيانات الهدف">
+      <div><span>المدى</span><strong id="range-label">— كم</strong></div>
+      <div><span>سرعة الاقتراب</span><strong id="closure-value">— م/ث</strong></div>
+      <div><span>سرعة الهدف</span><strong id="target-speed">— عقدة</strong></div>
+    </div>
+
+    <div class="flight-readout">
+      <div><span>السرعة</span><strong id="speed-value">٤٧٦ <small>عقدة</small></strong></div>
+      <div><span>الارتفاع</span><strong id="alt-value">٥٬٠٨٥ <small>قدم</small></strong></div>
+      <div><span>الاتجاه</span><strong id="heading-value">٠٠٠ <small>درجة</small></strong></div>
+      <p id="flight-info">ميل ٠°</p><p>الدفع <b id="throttle-value">٧٨٪</b></p>
+    </div>
+    <div class="radar-wrap"><canvas id="radar" width="240" height="200" aria-label="رادار الأهداف"></canvas></div>
+    <div class="seeker-readout">
+      <strong id="track-status">ابحث عن الهدف</strong>
+      <div class="track-meter"><i id="track-fill"></i></div>
+      <span id="track-detail">تتبّع الهدف واضغط مطولًا الزر الأيمن</span>
+    </div>
+    <div class="scope-bottom-right"><strong id="track-label">بحث</strong><span id="zoom-label">١٫٠×</span></div>
+    <div class="notice" id="notice" role="status" aria-live="polite"></div>
+    <div class="hint" id="scope-hint">الفأرة للتصويب · الزر الأيمن للتثبيت · مسافة للإطلاق · Esc للقائمة</div>
+
+    <div id="start-screen" class="overlay start-screen">
+      <div class="menu-card">
+        <p class="eyebrow">وضع حر · أهداف بلا نهاية</p>
+        <h1>صقر <span>١٥</span></h1>
+        <h2>احمِ السماء.</h2>
+        <p>تتبّع الحرارة. ثبّت التصويب. أطلق.<br>أهداف عشوائية. والسماء مفتوحة.</p>
+        <button id="start-btn" class="primary-btn">انطلق <span aria-hidden="true">◀</span></button>
+        <div class="menu-keys" aria-label="التحكم السريع">
+          <span><kbd>الفأرة</kbd><b>صوّب</b></span>
+          <span><kbd>الزر الأيمن</kbd><b>اضغط وثبّت</b></span>
+          <span><kbd>مسافة</kbd><b>أطلق</b></span>
+        </div>
+        <small>«انطلق» يلتقط حركة الفأرة. <bdi>Esc</bdi> يحرّرها ويفتح القائمة.</small>
+      </div>
+    </div>
+    <div id="pause-screen" class="overlay small-overlay" hidden>
+      <div class="menu-card">
+        <p class="eyebrow">السماء بانتظارك</p><h2>توقّف مؤقت</h2>
+        <button id="resume-btn" class="primary-btn">واصل الطيران <span aria-hidden="true">◀</span></button>
+        <div class="menu-buttons">
+          <button id="restart-btn">ابدأ من جديد</button><button id="help-btn">التحكم</button>
+          <button id="sound-btn" aria-label="كتم الصوت">الصوت يعمل</button><button id="full-btn">ملء الشاشة</button>
+        </div>
+      </div>
+    </div>
+    <div id="end-screen" class="overlay small-overlay" hidden>
+      <div class="menu-card">
+        <p class="eyebrow">وضع حر</p><h2 id="end-title">واصل الطيران</h2>
+        <p id="end-stats"></p><button id="again-btn" class="primary-btn">انطلق من جديد <span aria-hidden="true">◀</span></button>
+      </div>
+    </div>
+    <div id="error-screen" class="overlay small-overlay" hidden>
+      <div class="menu-card"><h2>الرسوم غير متاحة</h2><p>افتح اللعبة بمتصفح كروم أو إيدج مع تفعيل تسريع الرسوم.</p></div>
+    </div>
+  </main>
+
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <div class="dialog-head"><h2 id="help-title">جهّز نفسك للطيران</h2><button id="close-help" aria-label="إغلاق التحكم">×</button></div>
+    <p class="mode-tip">وضع حر · أهداف عشوائية بلا نهاية</p>
+    <div class="control-list">
+      <div><kbd>الفأرة</kbd><span>تصويب الكاميرا أو النظر حولك</span></div>
+      <div><kbd>زر أيمن / L</kbd><span>اضغط مطولًا وتتبّع الهدف لتثبيته</span></div>
+      <div><kbd>مسافة</kbd><span>إطلاق الصاروخ بعد التثبيت</span></div>
+      <div><kbd>W / S</kbd><span>رفع مقدمة الطائرة / خفضها</span></div>
+      <div><kbd>A / D</kbd><span>الميل يسارًا / يمينًا</span></div>
+      <div><kbd>Q / E</kbd><span>خفض الدفع / زيادة الدفع</span></div>
+      <div><kbd>B</kbd><span>قمرة الطيار / الكاميرا الحرارية</span></div>
+      <div><kbd>العجلة / + −</kbd><span>تقريب الصورة أو إبعادها</span></div>
+      <div><kbd>V</kbd><span>حراري أبيض / حراري أسود / ألوان</span></div>
+      <div><kbd>C / X</kbd><span>توسيط الكاميرا / إلغاء التتبع</span></div>
+      <div><kbd>Esc / P</kbd><span>تحرير الفأرة وإيقاف اللعب</span></div>
+      <div><kbd>F / M / H</kbd><span>ملء الشاشة / كتم الصوت / التحكم</span></div>
+    </div>
+    <p class="help-tip">ضع الصاروخ داخل منطقة التصويب، وواصل تتبّعه وأنت تضغط <b>زر الفأرة الأيمن</b> أو <bdi>L</bdi> لمدة <b>ثانية ونصف تقريبًا</b>. عند ثبات النغمة وظهور التثبيت، اضغط <b>مسافة</b> وأطلق.</p>
+    <div class="settings-buttons">
+      <button id="view-btn">قمرة الطيار <kbd>B</kbd></button>
+      <button id="white-btn">حراري أبيض</button><button id="black-btn">حراري أسود</button><button id="tv-btn">ألوان</button>
+      <button id="zoom-out">إبعاد −</button><button id="zoom-in">تقريب +</button>
+      <button id="throttle-down">دفع أقل −</button><button id="throttle-up">دفع أكثر +</button>
+    </div>
+    <small>لعبة طيران خيالية، وحركة الطائرة مبسّطة للّعب. إحداثيات الشاشة افتراضية داخل المحاكاة.</small>
+    <button id="help-done" class="primary-btn">جاهز!</button>
+  </dialog>
+  <div hidden>
+    <span id="wave">١</span>
+    <span id="station-label"></span><span id="feed-mode"></span><span id="coord-label"></span>
+    <button id="cue-btn"></button><button id="track-btn"></button><button id="fire-btn"></button><button id="release-btn"></button><button id="pause-btn"></button>
+  </div>
+</div>
+<script src="engine.js"></script><script src="seeker-samples.js"></script><script src="audio.js"></script><script src="interceptor-flight.js"></script><script src="game.js"></script>
+</body>
+</html>

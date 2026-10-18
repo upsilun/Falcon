@@ -1,0 +1,194 @@
+:root{color-scheme:dark;--lime:#d5fa88;--font:Tahoma,"Segoe UI",Arial,sans-serif;--digits:Tahoma,"Segoe UI",Arial,sans-serif;--sensor-digits:Consolas,"Courier New",Tahoma,monospace}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#0b100b;color:#f8faef;font:16px var(--font)}
+button{cursor:pointer;font:800 16px var(--font);border:0;color:inherit;background:#283422;padding:14px 20px;border-radius:5px;line-height:1.5}
+button:hover{filter:brightness(1.18)}
+button:active{transform:translateY(1px)}
+button:focus-visible{outline:3px solid var(--lime);outline-offset:4px}
+button:disabled{opacity:.4;cursor:default}
+[hidden]{display:none!important}
+.app,.scope{width:100%;height:100%;position:relative}
+.scope{outline:none;overflow:hidden;touch-action:none;cursor:crosshair}
+.app.in-play .scope{cursor:none}
+#world,#hud,.scope-vignette{position:absolute;inset:0;width:100%;height:100%}
+#hud{pointer-events:none;z-index:2}
+.scope-vignette{pointer-events:none;z-index:3;box-shadow:inset 0 0 110px #0006;background:repeating-linear-gradient(0deg,#00000005 0,#00000005 1px,transparent 1px,transparent 3px)}
+.game-top,.scope-top-left,.scope-top-right,.flight-readout,.scope-bottom-right,.seeker-readout,.hint,.notice,.edge-readout{position:absolute;z-index:4;pointer-events:none;text-shadow:0 2px 4px #000,1px 0 #000,-1px 0 #000}
+.game-top{inset:20px 28px auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.game-name{font-size:27px;font-weight:900;white-space:nowrap;line-height:1.3}
+.game-name b{color:var(--lime)}
+.game-name small{display:block;font-size:11px;margin-top:5px;opacity:.72}
+.scoreboard{display:flex;gap:24px;align-items:center;font-size:12px;font-weight:800}
+.scoreboard>span{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.scoreboard b{font:900 27px var(--digits);direction:ltr;unicode-bidi:isolate}
+.scoreboard .danger b{color:#ffbd96}
+.scoreboard .endless-mode b{color:var(--lime);font-family:Arial,sans-serif;font-size:35px;line-height:1}
+.scoreboard em{font-size:15px;font-style:normal}
+.timer{font:800 19px var(--digits);direction:ltr;unicode-bidi:isolate}
+.scope-top-left{top:100px;inset-inline-start:30px;display:flex;align-items:center;gap:14px;font-size:16px;font-weight:800}
+.scope-top-left #fov-label{font-size:13px;direction:ltr;unicode-bidi:isolate}
+.scope-top-right{top:102px;inset-inline-end:30px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;opacity:.8}
+#rec-time{direction:ltr;unicode-bidi:isolate}
+.record-dot{background:#ff7964;border-radius:50%;width:7px;height:7px;display:inline-block;animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.3}}
+.edge-readout{color:#f4f6e9;font-weight:800;text-shadow:-1px -1px 0 #071007,1px -1px 0 #071007,-1px 1px 0 #071007,1px 1px 0 #071007,0 2px 5px #000;line-height:1.4}
+.edge-readout>div{display:flex;align-items:baseline;justify-content:space-between;gap:11px;margin-top:7px}
+.edge-readout>div>span{font:800 12px var(--font);white-space:nowrap;opacity:.9}
+.edge-readout strong{font:800 25px var(--sensor-digits);white-space:nowrap;unicode-bidi:isolate}
+.edge-readout bdi{font-family:var(--sensor-digits)}
+.readout-caption{display:block;font:700 11px var(--font);opacity:.75;margin-bottom:9px;white-space:nowrap}
+.gps-readout{top:145px;inset-inline-end:30px;width:265px;max-width:30vw}
+.gps-readout strong{font-size:21px}
+.angle-readout{top:144px;inset-inline-start:30px;width:215px;max-width:26vw}
+.target-readout{bottom:211px;inset-inline-end:30px;width:220px;max-width:26vw}
+.target-readout>div{display:block;margin-top:15px}
+.target-readout>div>span{display:block;margin-bottom:3px}
+.target-readout strong{display:block;font-size:29px}
+.flight-readout{bottom:53px;inset-inline-start:28px;display:flex;gap:22px;align-items:flex-end;flex-wrap:wrap;max-width:345px}
+.flight-readout>div>span{font-size:11px;display:block;margin-bottom:5px;opacity:.75;font-weight:700}
+.flight-readout strong{display:block;font:900 24px var(--digits);white-space:nowrap}
+.flight-readout strong small{font:700 11px var(--font)}
+.flight-readout p{margin:0;font:700 11px var(--font);line-height:1.6;opacity:.8}
+.flight-readout #flight-info{width:100%;margin-top:-10px}
+.flight-readout p:last-child{position:absolute;top:-25px}
+.radar-wrap{position:absolute;z-index:4;inset-inline-end:18px;bottom:40px;width:165px;height:140px;opacity:.8;pointer-events:none;direction:ltr}
+.radar-wrap canvas{width:100%;height:100%}
+.scope-bottom-right{inset-inline-start:30px;bottom:190px;text-align:start;font-size:17px;font-weight:800;display:flex;flex-direction:column;gap:6px}
+.scope-bottom-right span{font-size:12px}
+#zoom-label{direction:ltr;unicode-bidi:isolate}
+.seeker-readout{left:50%;bottom:78px;transform:translateX(-50%);text-align:center;width:280px;max-width:40vw}
+.seeker-readout strong{font-size:23px;font-weight:900;line-height:1.5}
+.track-meter{height:7px;width:190px;max-width:90%;background:#090e08b8;border:1px solid #e9efdf6b;margin:8px auto;border-radius:3px;overflow:hidden}
+.track-meter i{display:block;width:0;height:100%;background:var(--lime)}
+.seeker-readout>span{display:block;font-size:12px;line-height:1.65;font-weight:700}
+.hint{left:50%;bottom:19px;transform:translateX(-50%);font-size:11px;font-weight:700;text-align:center;width:max-content;max-width:calc(100% - 28px);line-height:1.7}
+.notice{inset:26% 24% auto;font-size:26px;font-weight:900;text-align:center;line-height:1.6;transition:opacity .2s}
+.overlay{position:absolute;z-index:20;inset:0;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;cursor:default;background:radial-gradient(ellipse at 50% 35%,#17210dd4,#050b05ef 85%);backdrop-filter:blur(3px)}
+.menu-card{width:700px;max-width:100%;text-align:center;padding:25px 20px;margin:auto;flex:none}
+.eyebrow{display:flex;align-items:center;justify-content:center;gap:16px;color:var(--lime);font-weight:800;font-size:15px;margin:0 0 12px;line-height:1.5}
+.eyebrow::before,.eyebrow::after{content:"";height:2px;width:42px;background:var(--lime);opacity:.65}
+.menu-card h1{font-size:clamp(76px,9vw,126px);font-weight:900;line-height:1.2;margin:0 0 4px;text-shadow:0 6px 0 #0007}
+.menu-card h1 span{color:var(--lime)}
+.menu-card h2{font-weight:900;font-size:35px;line-height:1.45;margin:8px 0 14px}
+.menu-card>p:not(.eyebrow){font-size:18px;line-height:1.85;color:#d1dcc6;margin:14px 0 27px;font-weight:700}
+.primary-btn{background:var(--lime);color:#15210a;min-width:250px;max-width:100%;font-size:27px;font-weight:900;padding:15px 34px;border-radius:5px;box-shadow:0 7px 0 #698340;display:flex;justify-content:center;gap:32px;align-items:center;margin:0 auto;line-height:1.5}
+.primary-btn span{font-size:21px}
+.primary-btn:active{transform:translateY(3px);box-shadow:0 4px 0 #698340}
+.menu-keys{display:flex;justify-content:center;gap:34px;margin:30px 0 18px;font-size:12px;font-weight:700}
+.menu-keys>span{display:flex;flex-direction:column;gap:9px;align-items:center;min-width:85px}
+.menu-keys b{font-size:14px}
+kbd{font:700 12px var(--font);padding:5px 9px;background:#101b0dbb;border:1px solid #b8d39c77;border-bottom-width:3px;border-radius:4px;line-height:1.5;white-space:nowrap;direction:ltr;unicode-bidi:isolate}
+.menu-keys kbd{min-width:75px}
+.menu-card>small{display:block;font-size:12px;line-height:1.8;color:#a5b79a}
+.small-overlay{background:#071007eb}
+.small-overlay h2{font-size:52px;line-height:1.5;margin-bottom:30px}
+.menu-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:380px;margin:28px auto 0}
+.menu-buttons button{font-size:15px;border:1px solid #596c48;background:#24311c}
+.app:not(.in-play) .game-top,.app:not(.in-play) .scope-top-left,.app:not(.in-play) .scope-top-right,.app:not(.in-play) .flight-readout,.app:not(.in-play) .radar-wrap,.app:not(.in-play) .scope-bottom-right,.app:not(.in-play) .seeker-readout,.app:not(.in-play) .edge-readout{opacity:.12}
+.scope.cockpit .flight-readout,.scope.cockpit .radar-wrap{display:none}
+.scope.cockpit .scope-bottom-right,.scope.cockpit .seeker-readout{bottom:145px}
+.scope.cockpit .hint{bottom:124px}
+.scope.cockpit .scope-vignette{background:none}
+.scope.cockpit .target-readout{bottom:155px}
+dialog{background:#141e10;border:2px solid #6b8552;border-radius:8px;width:660px;max-width:calc(100vw - 28px);max-height:92vh;color:#f5f8ef;padding:25px 30px;box-shadow:0 20px 90px #000b;overflow-y:auto}
+dialog::backdrop{background:#071006d4;backdrop-filter:blur(6px)}
+.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:15px}
+.dialog-head h2{font-size:27px;font-weight:900;margin:0;line-height:1.5}
+.dialog-head button{font-size:29px;padding:2px 11px;background:transparent}
+.mode-tip{font-weight:800;color:var(--lime);font-size:14px;margin:0 0 16px;line-height:1.7}
+.control-list>div{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:9px 0;border-bottom:1px solid #34452c;font-size:13px;line-height:1.7}
+.control-list kbd{color:var(--lime);font-size:12px;flex:none}
+.control-list>div>span{text-align:end}
+.help-tip{font-size:14px;line-height:1.9;padding:14px 17px;background:#2a3a1e;border-inline-start:4px solid var(--lime)}
+.settings-buttons{display:flex;flex-wrap:wrap;gap:8px;margin:17px 0}
+.settings-buttons button{font-size:12px;padding:10px 12px;border:1px solid #526b3e}
+.settings-buttons .selected{background:var(--lime);color:#12210a}
+.settings-buttons kbd{font-size:10px;padding:1px 4px}
+dialog>small{font-size:11px;line-height:1.8;display:block;color:#a5b996;margin:18px 0}
+dialog .primary-btn{font-size:20px;padding:12px;width:100%;min-width:0;box-shadow:none}
+@media(max-width:900px){
+  .game-top{inset:16px 20px auto;gap:14px}.game-name{font-size:23px}.game-name small{display:none}
+  .scoreboard{gap:15px;font-size:11px}.scoreboard>span{gap:6px}.scoreboard b{font-size:22px}.timer{font-size:16px}
+  .scope-top-left,.scope-top-right{top:70px;font-size:13px}.scope-top-left{inset-inline-start:22px}.scope-top-right{inset-inline-end:22px}
+  .gps-readout{top:108px;inset-inline-end:22px;width:235px;max-width:32vw}.gps-readout strong{font-size:19px}
+  .angle-readout{top:108px;inset-inline-start:22px;width:192px;max-width:27vw}.angle-readout strong{font-size:23px}
+  .target-readout{inset-inline-end:22px;bottom:180px;width:185px}.target-readout strong{font-size:26px}.target-readout>div{margin-top:13px}
+  .flight-readout{inset-inline-start:20px;gap:15px;max-width:290px}.flight-readout strong{font-size:20px}
+  .seeker-readout{bottom:137px;max-width:44vw}.seeker-readout strong{font-size:21px}
+  .radar-wrap{width:135px;height:116px}.notice{font-size:23px}
+}
+@media(max-width:600px){
+  .game-top{inset:13px 14px auto;gap:12px}.game-name{font-size:20px}.timer{display:none}
+  .scoreboard{gap:12px}.scoreboard>span{font-size:10px;gap:5px}.scoreboard b{font-size:20px}.scoreboard em{font-size:12px}
+  .scoreboard>span:nth-child(3){display:none}
+  .scope-top-left{top:59px;font-size:12px;inset-inline-start:15px;gap:10px}.scope-top-left #fov-label{font-size:11px}
+  .scope-top-right{top:61px;font-size:10px;inset-inline-end:15px;gap:5px}
+  .flight-readout{bottom:62px;inset-inline-start:15px;gap:12px;max-width:230px}.flight-readout>div>span{font-size:10px}
+  .flight-readout strong{font-size:18px}.flight-readout strong small{font-size:9px}.flight-readout p{font-size:10px}
+  .radar-wrap{width:105px;height:91px;inset-inline-end:7px;bottom:52px}
+  .scope-bottom-right{inset-inline-start:17px;font-size:14px;bottom:155px}.scope-bottom-right span{font-size:11px}
+  .gps-readout{top:92px;inset-inline-end:15px;width:190px;max-width:49vw}.gps-readout strong{font-size:16px}.readout-caption{font-size:9px;margin-bottom:6px}
+  .edge-readout>div{gap:6px}.edge-readout>div>span{font-size:10px}
+  .angle-readout{top:90px;inset-inline-start:15px;width:126px;max-width:35vw}.angle-readout>div{display:block;margin-top:9px}.angle-readout>div>span{display:block;margin-bottom:2px}.angle-readout strong{font-size:21px}
+  .target-readout{inset-inline-end:15px;bottom:145px;width:150px;max-width:42vw}.target-readout>div{margin-top:11px}.target-readout strong{font-size:22px}
+  .flight-readout,.radar-wrap{display:none}
+  .seeker-readout{bottom:56px;width:270px;max-width:80vw}.seeker-readout strong{font-size:20px}.seeker-readout>span{font-size:11px}
+  .hint{bottom:13px;font-size:10px;max-width:calc(100% - 22px)}.notice{font-size:20px;top:31%;inset-inline:20%}
+  .menu-card{padding:16px 5px}.menu-card h1{font-size:79px}.menu-card h2{font-size:28px}
+  .menu-card>p:not(.eyebrow){font-size:16px}.eyebrow{font-size:13px}.primary-btn{font-size:25px;min-width:225px}
+  .menu-keys{gap:13px}.menu-keys>span{min-width:77px}.menu-keys b{font-size:12px}.menu-keys kbd{font-size:11px;padding:5px 6px}
+  .small-overlay h2{font-size:39px}.menu-buttons button{font-size:14px}
+  dialog{padding:20px 18px}.dialog-head h2{font-size:22px}.control-list>div{font-size:12px;gap:12px}.control-list kbd{font-size:11px}
+}
+@media(max-width:380px){
+  .game-name{font-size:18px}.scoreboard{gap:9px}.scoreboard>span{font-size:9px;gap:4px}.scoreboard b{font-size:18px}
+  .scope-top-right>span:nth-child(2){display:none}.flight-readout{max-width:210px;gap:9px}.flight-readout strong{font-size:16px}
+  .gps-readout strong{font-size:14px}.gps-readout>div>span{font-size:9px}.angle-readout{width:110px}.angle-readout strong{font-size:19px}.target-readout strong{font-size:20px}
+  .menu-card h1{font-size:68px}.menu-keys{gap:8px}.menu-keys>span{min-width:70px}.menu-card>small{font-size:11px}
+  .control-list>div{align-items:flex-start}.control-list kbd{font-size:10px}.settings-buttons button{font-size:11px}
+}
+@media(max-height:650px){
+  .overlay{padding:12px}.menu-card{padding:12px 15px}.eyebrow{margin-bottom:5px;font-size:12px}
+  .menu-card h1{font-size:76px}.menu-card h2{font-size:27px;margin:4px 0 8px}.menu-card>p:not(.eyebrow){font-size:15px;line-height:1.6;margin:9px 0 18px}
+  .primary-btn{font-size:23px;padding:12px 28px}.menu-keys{margin:22px 0 12px;gap:25px}.menu-keys>span{gap:6px}.menu-card>small{font-size:11px}
+  .small-overlay h2{font-size:40px;margin-bottom:24px}.menu-buttons{margin-top:22px}.menu-buttons button{padding:11px 16px}
+}
+@media(max-height:480px){
+  .game-top{top:10px}.game-name{font-size:20px}.game-name small{display:none}.scoreboard b{font-size:20px}.scoreboard{font-size:10px}
+  .scope-top-left,.scope-top-right{top:48px;font-size:11px}.scope-top-left #fov-label{font-size:10px}
+  .gps-readout{top:78px;width:225px;max-width:31vw}.gps-readout strong{font-size:17px}.readout-caption{font-size:9px;margin-bottom:5px}.edge-readout>div{margin-top:5px}
+  .angle-readout{top:76px;width:180px}.angle-readout strong{font-size:21px}.angle-readout>div>span{font-size:10px}
+  .target-readout{bottom:132px;width:180px}.target-readout>div{margin-top:7px}.target-readout>div>span{font-size:10px;margin-bottom:1px}.target-readout strong{font-size:22px}
+  .flight-readout{bottom:42px;gap:12px}.flight-readout strong{font-size:17px}.flight-readout p{font-size:9px}.flight-readout>div>span{font-size:9px;margin-bottom:2px}
+  .flight-readout #flight-info{display:none}.flight-readout p:last-child{top:-20px}
+  .radar-wrap{width:100px;height:85px;bottom:30px}.scope-bottom-right{bottom:123px;font-size:11px}.scope-bottom-right span{font-size:10px}
+  .seeker-readout{bottom:48px;max-width:36vw}.seeker-readout strong{font-size:18px}.seeker-readout>span{font-size:10px}.track-meter{margin:5px auto;height:5px;width:140px}
+  .hint{bottom:8px;font-size:9px}.notice{font-size:20px;top:25%}
+  .menu-card h1{font-size:61px}.menu-card h2{font-size:23px}.menu-card>p:not(.eyebrow){font-size:14px;margin:6px 0 14px}
+  .eyebrow{font-size:11px}.primary-btn{font-size:21px;padding:10px 26px;min-width:210px}.menu-keys{margin:18px 0 10px}.menu-keys b{font-size:11px}.menu-keys kbd{font-size:10px;padding:3px 7px}
+  .small-overlay h2{font-size:35px}.scope.cockpit .seeker-readout{bottom:108px}.scope.cockpit .scope-bottom-right{bottom:111px}.scope.cockpit .hint{bottom:90px}
+}
+@media(max-width:600px) and (max-height:480px){
+  .gps-readout{top:76px;max-width:47vw}.gps-readout strong{font-size:14px}.angle-readout{top:74px;max-width:30vw;width:114px}.angle-readout strong{font-size:19px}
+  .target-readout{bottom:106px;width:133px;max-width:39vw}.target-readout strong{font-size:19px}.target-readout>div{margin-top:5px}
+  .scope-bottom-right{bottom:107px;max-width:30vw}.seeker-readout{bottom:35px;max-width:70vw}.seeker-readout strong{font-size:17px}.seeker-readout>span{font-size:9px}
+  .notice{top:38%;font-size:17px}.scope.cockpit .target-readout{bottom:105px}
+}
+@media(min-width:601px) and (max-height:700px){
+  .radar-wrap{display:none}
+  .target-readout{bottom:64px;width:245px;max-width:29vw}
+  .target-readout>div{display:flex;align-items:baseline;gap:8px;margin-top:9px}
+  .target-readout>div>span{margin:0;font-size:11px}
+  .target-readout strong{font-size:24px}
+  .scope.cockpit .target-readout{bottom:145px}
+}
+@media(max-height:360px){
+  .flight-readout,.radar-wrap,.scope-bottom-right{display:none}
+  .target-readout,.scope.cockpit .target-readout{bottom:30px}.target-readout strong{font-size:18px}.target-readout>div>span{font-size:9px}.target-readout>div{margin-top:5px}
+  .seeker-readout,.scope.cockpit .seeker-readout{bottom:30px}.notice{top:42%;font-size:17px}.scope.cockpit .hint{bottom:8px}
+}
+@media(max-width:600px) and (max-height:360px){
+  .seeker-readout{left:auto;inset-inline-start:15px;transform:none;width:150px;max-width:42vw;text-align:start}
+  .track-meter{margin-inline:0}.seeker-readout strong{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

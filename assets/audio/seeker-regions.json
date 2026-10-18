@@ -1,0 +1,61 @@
+{
+  "sourceFilename": "aim-9-missile-lock.mp3",
+  "sourceDurationSeconds": 16.021768707482995,
+  "analysis": "Waveform and spectral transitions inspected; listening not claimed.",
+  "processing": "Mono downmix, DC removal, gain normalization, 90 ms loop seam. Original pitch and playback rate preserved.",
+  "mapping": "seekerStrength crossfades search/weak/strong; tracking selects lock.",
+  "stages": [
+    {
+      "id": "search",
+      "sourceStart": 0.45,
+      "sourceEnd": 2.834421768707483,
+      "sourceDuration": 2.384421768707483,
+      "loopDuration": 2.294421768707483,
+      "crossfadeSeconds": 0.09,
+      "gain": 1.529601,
+      "rms": 0.12,
+      "peak": 0.464572,
+      "joinCorrelation": 0.320781,
+      "asset": "assets/audio/seeker-search.wav"
+    },
+    {
+      "id": "weak",
+      "sourceStart": 3.45,
+      "sourceEnd": 6.358140589569161,
+      "sourceDuration": 2.908140589569161,
+      "loopDuration": 2.818140589569161,
+      "crossfadeSeconds": 0.09,
+      "gain": 1.582288,
+      "rms": 0.12,
+      "peak": 0.489061,
+      "joinCorrelation": 0.25854,
+      "asset": "assets/audio/seeker-weak.wav"
+    },
+    {
+      "id": "strong",
+      "sourceStart": 7.15,
+      "sourceEnd": 9.738231292517007,
+      "sourceDuration": 2.588231292517007,
+      "loopDuration": 2.4982312925170067,
+      "crossfadeSeconds": 0.09,
+      "gain": 2.02083,
+      "rms": 0.12,
+      "peak": 0.46319,
+      "joinCorrelation": 0.391156,
+      "asset": "assets/audio/seeker-strong.wav"
+    },
+    {
+      "id": "lock",
+      "sourceStart": 12.65,
+      "sourceEnd": 15.551678004535148,
+      "sourceDuration": 2.9016780045351473,
+      "loopDuration": 2.8116780045351475,
+      "crossfadeSeconds": 0.09,
+      "gain": 1.944578,
+      "rms": 0.12,
+      "peak": 0.21747,
+      "joinCorrelation": 0.987399,
+      "asset": "assets/audio/seeker-lock.wav"
+    }
+  ]
+}
